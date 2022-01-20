@@ -71,7 +71,7 @@ public class InstanceProfileCredentialsProviderTest {
     public void resolveCredentials_metadataLookupDisabled_throws() {
         System.setProperty(SdkSystemSetting.AWS_EC2_METADATA_DISABLED.property(), "true");
         thrown.expect(SdkClientException.class);
-        thrown.expectMessage("Loading credentials from local endpoint is disabled");
+        thrown.expectMessage("IMDS credentials have been disabled");
         try {
             InstanceProfileCredentialsProvider.builder().build().resolveCredentials();
         } finally {
@@ -170,7 +170,7 @@ public class InstanceProfileCredentialsProviderTest {
     @Test
     public void resolveCredentials_queriesTokenResource_400Error_throws() {
         thrown.expect(SdkClientException.class);
-        thrown.expectMessage("token");
+        thrown.expectMessage("Failed to load credentials from IMDS");
 
         stubFor(put(urlPathEqualTo(TOKEN_RESOURCE_PATH)).willReturn(aResponse().withStatus(400).withBody("oops")));
 
